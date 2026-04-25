@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Search Trip{% endblock %}
+
+{% block content %}
+<!-- Header of the search page -->
+<h1>Search Trip by Code</h1>
+
+<!-- Box for search form -->
+<div class="bx">
+    <div class="bx-title">Enter Trip Code</div>
+    <form method="POST" action="/search" id="search-form">
+        <div class="fgrp">
+            <label for="code-input">Trip Code</label>
+            <!-- Input field for trip code -->
+            <input type="text" id="code-input" name="code" class="finput"
+                   placeholder="e.g. T101, T203, T502 ..."
+                   value="{{ request.form.get('code', '') }}"
+                   autocomplete="off" required />
+        </div>
+        <!-- Submit button -->
+        <button type="submit" id="btn-search" class="btn btn-blue">Search</button>
+    </form>
+</div>
+
+<!-- Show error msg if code not found -->
+{% if error %}
+<div class="msg msg-err" id="err-box">{{ error }}</div>
+{% endif %}
+
+<!-- Result box for the found trip -->
+{% if trip %}
+<div class="bx" id="result-box">
+    <!-- Header of the result -->
+    <div class="bx-title">
+        Trip Found &nbsp;
+        <span class="tag">{{ trip.code }}</span>
+        <span class="tag tag-blue" style="margin-left:4px;">Line {{ trip.line_code }}</span>
+    </div>
+
+    <!-- Main trip info -->
+    <p style="font-size:15px; font-weight:bold; margin-bottom:12px;">
+        {{ trip.departure }} &rarr; {{ trip.arrival }}
+    </p>
+
+    <!-- Train and days info -->
+    <p style="font-size:13px; margin-bottom:12px;">
+        Train type: <span class="tag tag-blue">{{ trip.type }}</span>
+        {% if trip.days %}
+        &nbsp; Days: <span class="tag">{{ trip.days }}</span>
+        {% endif %}
+    </p>
+
+    <!-- Trip schedules -->
+    {% for sched in trip.schedules %}
+    <p style="font-size:13px; background:#f5f5f5; padding:8px 12px; border:1px solid #ddd; margin-bottom:8px;">
+        Departure: <strong>{{ sched.departure }}</strong>
+        &nbsp;|&nbsp;
+        Arrival: <strong>{{ sched.arrival }}</strong>
+    </p>
+    {% endfor %}
+
+    <!-- Price classes subtitle -->
+    <div class="sec">Ticket Classes and Prices</div>
+    <!-- List of classes -->
+    <table id="classes-table">
+        <thead>
+            <tr>
+                <th>Class</th>
+                <th>Price (DA)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cls in trip.classes %}
+            <!-- VIP row in red -->
+            <tr {% if cls.type == 'VIP' %}class="vrow"{% endif %}>
+                <td {% if cls.type == 'VIP' %}class="vip"{% endif %}>{{ cls.type }}</td>
+                <td {% if cls.type == 'VIP' %}class="vip"{% endif %}>{{ cls.price }} DA</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Bottom buttons -->
+    <div class="actions">
+        <a href="/search"     class="btn btn-blue">Search Again</a>
+        <a href="/filter"     class="btn btn-red">Filter Trips</a>
+        <a href="/"           class="btn btn-gray">Home</a>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

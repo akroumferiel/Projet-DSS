@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}Filter Trips{% endblock %}
+
+{% block content %}
+<!-- Title of the filter page -->
+<h1>Filter Trips</h1>
+
+<!-- Filter form container -->
+<div class="bx">
+    <div class="bx-title">Filter Options</div>
+    <form method="POST" action="/filter" id="filter-form">
+        <!-- Flex row for inputs -->
+        <div class="frow">
+
+            <!-- Selection for departure city -->
+            <div class="fgrp">
+                <label for="dep-sel">Departure City</label>
+                <select name="departure_city" id="dep-sel" class="finput">
+                    <option value="">-- Any --</option>
+                    {% for city in cities %}
+                    <option value="{{ city }}" {% if city == sel_departure %}selected{% endif %}>{{ city }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Selection for arrival city -->
+            <div class="fgrp">
+                <label for="arr-sel">Arrival City</label>
+                <select name="arrival_city" id="arr-sel" class="finput">
+                    <option value="">-- Any --</option>
+                    {% for city in cities %}
+                    <option value="{{ city }}" {% if city == sel_arrival %}selected{% endif %}>{{ city }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Selection for train type -->
+            <div class="fgrp">
+                <label for="type-sel">Train Type</label>
+                <select name="train_type" id="type-sel" class="finput">
+                    <option value="">-- Any --</option>
+                    {% for tt in train_types %}
+                    <option value="{{ tt }}" {% if tt == sel_train_type %}selected{% endif %}>{{ tt }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Input for maximum price -->
+            <div class="fgrp">
+                <label for="price-inp">Max Price (DA)</label>
+                <input type="number" id="price-inp" name="max_price" class="finput"
+                       placeholder="e.g. 1500" min="0" value="{{ sel_max_price }}" />
+            </div>
+
+        </div>
+
+        <!-- Action buttons -->
+        <button type="submit" id="btn-apply" class="btn btn-red">Apply Filter</button>
+        <a href="/filter" id="btn-reset" class="btn btn-gray">Reset</a>
+    </form>
+</div>
+
+<!-- Info when user first opens the page -->
+{% if not filtered %}
+<div class="msg msg-info">Please select at least one filter and click Apply Filter.</div>
+
+<!-- Results section -->
+{% elif results %}
+<div class="msg msg-ok">{{ results | length }} result(s) found.</div>
+
+<div class="bx">
+    <div class="bx-title">Results</div>
+    <table id="results-table">
+        <thead>
+            <tr>
+                <th>Line</th>
+                <th>Code</th>
+                <th>Departure</th>
+                <th>Arrival</th>
+                <th>Schedule</th>
+                <th>Days</th>
+                <th>Train Type</th>
+                <th>Class</th>
+                <th>Price (DA)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for trip in results %}
+            {% for cls in trip.classes %}
+            <!-- Loop each trip and class -->
+            <tr {% if cls.type == 'VIP' %}class="vrow"{% endif %}>
+                <td><span class="tag">{{ trip.line_code }}</span></td>
+                <td><span class="tag tag-blue">{{ trip.code }}</span></td>
+                <td>{{ trip.departure }}</td>
+                <td>{{ trip.arrival }}</td>
+                <td>{% if trip.schedules %}{{ trip.schedules[0].departure }} - {{ trip.schedules[0].arrival }}{% else %}-{% endif %}</td>
+                <td style="font-size:12px;">{{ trip.days if trip.days else '-' }}</td>
+                <td>{{ trip.type }}</td>
+                <td {% if cls.type == 'VIP' %}class="vip"{% endif %}>{{ cls.type }}</td>
+                <td {% if cls.type == 'VIP' %}class="vip"{% endif %}>{{ cls.price }} DA</td>
+            </tr>
+            {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Message when no match is found -->
+{% else %}
+<div class="msg msg-err">No trips match the selected criteria.</div>
+{% endif %}
+
+{% endblock %}

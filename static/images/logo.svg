@@ -1,0 +1,24 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2487fb"/>
+      <stop offset="100%" stop-color="#93d1ff"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="100%" height="100%" rx="15" fill="url(#bg)" />
+
+  <!-- The Train Tracks knot -->
+  <g fill="none" stroke="#0f1b3e" stroke-width="4.5" stroke-linecap="butt">
+    <!-- Top-left sweeping to bottom horizontal -->
+    <path d="M 28,20 C 45,50 60,65 78,65" />
+    <path d="M 34,20 C 49,42 63,55 78,55" />
+    <path d="M 40,20 C 53,35 66,45 78,45" />
+
+    <!-- Bottom-left sweeping to top horizontal -->
+    <path d="M 28,80 C 45,50 60,35 78,35" />
+    <path d="M 34,80 C 49,58 63,45 78,45" />
+    <path d="M 40,80 C 53,65 66,55 78,55" />
+  </g>
+</svg>

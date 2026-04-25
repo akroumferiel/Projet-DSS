@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}Statistics{% endblock %}
+
+{% block content %}
+<!-- Page heading -->
+<h1>Trip Statistics</h1>
+
+<!-- Section: Global train type statistics -->
+<div class="bx" id="global-box">
+    <div class="bx-title">Number of Trips per Train Type (Global)</div>
+    {% if global_type %}
+    <!-- Global stats table -->
+    <table id="global-table">
+        <thead>
+            <tr>
+                <th>Train Type</th>
+                <th>Number of Trips</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ttype, count in global_type.items() | sort %}
+            <tr>
+                <!-- Colored badge based on type -->
+                <td>
+                    {% if ttype == 'Rapid' %}<span class="tag tag-red">{{ ttype }}</span>
+                    {% elif ttype == 'Express' %}<span class="tag tag-blue">{{ ttype }}</span>
+                    {% elif ttype == 'Coradia' %}<span class="tag tag-green">{{ ttype }}</span>
+                    {% else %}<span class="tag">{{ ttype }}</span>{% endif %}
+                </td>
+                <td>{{ count }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="msg msg-info">No data.</div>
+    {% endif %}
+</div>
+
+<!-- Section: Detailed stats for each line -->
+<div class="sec">Statistics per Line</div>
+
+{% for s in stats %}
+<div class="bx" id="line-{{ s.line_code }}">
+
+    <div class="bx-title">
+        <span class="tag">{{ s.line_code }}</span>
+        &nbsp; {{ s.departure }} &rarr; {{ s.arrival }}
+    </div>
+
+    <!-- Boxes showing cheap and expensive trips for the line -->
+    <div class="grid2">
+
+        <!-- Cheapest trip info box -->
+        <div class="sbox sbox-green" id="cheap-{{ s.line_code }}">
+            <div class="sbox-lbl">Cheapest Trip</div>
+            {% if s.cheapest %}
+            <div class="sbox-val">{{ s.cheapest.price }} DA</div>
+            <div class="sbox-info">
+                Code: {{ s.cheapest.code }}<br/>
+                Class: {{ s.cheapest.class }}<br/>
+                Type: {{ s.cheapest.type }}
+            </div>
+            {% else %}
+            <div class="sbox-info">No data</div>
+            {% endif %}
+        </div>
+
+        <!-- Most expensive trip info box -->
+        <div class="sbox sbox-red" id="exp-{{ s.line_code }}">
+            <div class="sbox-lbl">Most Expensive Trip</div>
+            {% if s.most_expensive %}
+            <div class="sbox-val">{{ s.most_expensive.price }} DA</div>
+            <div class="sbox-info">
+                Code: {{ s.most_expensive.code }}<br/>
+                Class: {{ s.most_expensive.class }}<br/>
+                Type: {{ s.most_expensive.type }}
+            </div>
+            {% else %}
+            <div class="sbox-info">No data</div>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <!-- Shows train types specifically for this one line -->
+    {% if s.type_count %}
+    <p style="font-size:13px; font-weight:bold; margin-bottom:8px;">Train Types on This Line:</p>
+    <table id="type-{{ s.line_code }}" style="max-width:380px;">
+        <thead>
+            <tr>
+                <th>Train Type</th>
+                <th>Trips</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ttype, count in s.type_count.items() | sort %}
+            <tr>
+                <td>
+                    {% if ttype == 'Rapid' %}<span class="tag tag-red">{{ ttype }}</span>
+                    {% elif ttype == 'Express' %}<span class="tag tag-blue">{{ ttype }}</span>
+                    {% elif ttype == 'Coradia' %}<span class="tag tag-green">{{ ttype }}</span>
+                    {% else %}<span class="tag">{{ ttype }}</span>{% endif %}
+                </td>
+                <td>{{ count }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+</div>
+{% endfor %}
+
+{% endblock %}

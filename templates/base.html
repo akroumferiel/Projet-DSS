@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Railway Trip Management{% endblock %}</title>
+    <style>
+        /* general */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #000000;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* navigation bar */
+        .topbar {
+            background-color: #003399;
+            padding: 10px 20px;
+            overflow: hidden;
+        }
+
+        .topbar .logo {
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            float: left;
+            margin-right: 30px;
+            text-decoration: none;
+        }
+
+        .topbar a {
+            color: #ccc;
+            text-decoration: none;
+            margin-right: 15px;
+            font-size: 14px;
+        }
+
+        .topbar a:hover,
+        .topbar a.active {
+            color: #ffff00;
+            text-decoration: underline;
+        }
+
+        .topbar::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        .page-credit {
+            background-color: #f3f3f3;
+            color: #333333;
+            padding: 10px 20px;
+            font-size: 13px;
+            border-bottom: 1px solid #cccccc;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* page content area */
+        .wrap {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* page title */
+        h1 {
+            font-size: 22px;
+            color: #000000;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #0066cc;
+            padding-bottom: 8px;
+        }
+
+        /* sub section title */
+        .sec {
+            font-size: 16px;
+            color: #0066cc;
+            font-weight: bold;
+            margin: 20px 0 10px;
+            border-bottom: 1px solid #cccccc;
+            padding-bottom: 4px;
+        }
+
+        /* white content box */
+        .bx {
+            background: #ffffff;
+            border: 1px solid #999999;
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .bx-title {
+            font-size: 15px;
+            font-weight: bold;
+            color: #000000;
+            margin-bottom: 14px;
+            border-bottom: 1px solid #cccccc;
+            padding-bottom: 8px;
+        }
+
+        /* table style */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #003399;
+            color: #ffffff;
+            padding: 8px 12px;
+            text-align: left;
+            border: 1px solid #003399;
+        }
+
+        td {
+            padding: 7px 12px;
+            border: 1px solid #cccccc;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #e8e8e8;
+        }
+
+        tbody tr:hover {
+            background-color: #cce5ff;
+        }
+
+        /* buttons */
+        .btn {
+            display: inline-block;
+            padding: 7px 16px;
+            font-size: 13px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            text-decoration: none;
+            margin-right: 6px;
+        }
+
+        .btn-blue {
+            background-color: #0066cc;
+            color: #ffffff;
+        }
+
+        .btn-red {
+            background-color: #cc0000;
+            color: #ffffff;
+        }
+
+        .btn-green {
+            background-color: #006600;
+            color: #ffffff;
+        }
+
+        .btn-gray {
+            background-color: #666666;
+            color: #ffffff;
+        }
+
+        .btn-sm {
+            padding: 4px 10px;
+            font-size: 12px;
+        }
+
+        .btn:hover {
+            opacity: 0.85;
+        }
+
+        /* alert messages */
+        .msg {
+            padding: 10px 15px;
+            border-radius: 3px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            border: 1px solid transparent;
+        }
+
+        .msg-ok {
+            background-color: #ccffcc;
+            border-color: #006600;
+            color: #006600;
+        }
+
+        .msg-err {
+            background-color: #ffcccc;
+            border-color: #cc0000;
+            color: #cc0000;
+        }
+
+        .msg-info {
+            background-color: #cce5ff;
+            border-color: #0066cc;
+            color: #003399;
+        }
+
+        /* form fields */
+        .fgrp {
+            margin-bottom: 14px;
+        }
+
+        .fgrp label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        .finput {
+            width: 100%;
+            padding: 7px 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 13px;
+            box-sizing: border-box;
+        }
+
+        .finput:focus {
+            border-color: #0066cc;
+            outline: none;
+        }
+
+        .frow {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px;
+        }
+
+        /* vip class in red */
+        .vip {
+            color: #cc0000;
+            font-weight: bold;
+        }
+
+        .vrow td {
+            color: #cc0000;
+            font-weight: bold;
+        }
+
+        /* small colored tags */
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            background-color: #333333;
+            color: #ffffff;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+
+        .tag-blue {
+            background-color: #0066cc;
+        }
+
+        .tag-red {
+            background-color: #cc0000;
+        }
+
+        .tag-green {
+            background-color: #006600;
+        }
+
+        /* statistics boxes */
+        .grid2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        .sbox {
+            padding: 14px;
+            border-radius: 4px;
+            font-size: 13px;
+            border: 1px solid #ccc;
+        }
+
+        .sbox-green {
+            background-color: #ccffcc;
+            border-color: #006600;
+        }
+
+        .sbox-red {
+            background-color: #ffcccc;
+            border-color: #cc0000;
+        }
+
+        .sbox-lbl {
+            font-weight: bold;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .sbox-green .sbox-lbl {
+            color: #006600;
+        }
+
+        .sbox-red .sbox-lbl {
+            color: #cc0000;
+        }
+
+        .sbox-val {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .sbox-green .sbox-val {
+            color: #006600;
+        }
+
+        .sbox-red .sbox-val {
+            color: #cc0000;
+        }
+
+        .sbox-info {
+            color: #777;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .actions {
+            margin-top: 16px;
+        }
+
+        /* footer */
+        .foot {
+            background-color: #003399;
+            color: #ffffff;
+            text-align: center;
+            padding: 12px;
+            font-size: 13px;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="topbar">
+        <a href="/" class="logo">
+            <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="Railway Logo" style="height: 24px; vertical-align: middle; margin-right: 10px; border-radius: 4px;">Railway Trip Management
+        </a>
+        <a href="/" {% if request.endpoint=='index' %}class="active" {% endif %}>Home</a>
+        <a href="/search" {% if request.endpoint=='search' %}class="active" {% endif %}>Search Trip</a>
+        <a href="/filter" {% if request.endpoint=='filter_trips' %}class="active" {% endif %}>Filter Trips</a>
+        <a href="/statistics" {% if request.endpoint=='statistics' %}class="active" {% endif %}>Statistics</a>
+    </div>
+
+    <div class="page-credit">
+        This page is implemented by the students : ALSID CHIKH Sid Ahmed BOUDJERADA Ahmed Zinelabidine AKROUM Feriel / Groupe : 02
+    </div>
+
+    <div class="wrap">
+        {% block content %}{% endblock %}
+    </div>
+
+    <div class="foot">
+        UMBB 2025/2026  |  Semi-structured data Project
+    </div>
+
+</body>
+
+</html>

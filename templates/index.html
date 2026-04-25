@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<!-- Page heading -->
+<h1>Train Lines Overview</h1>
+
+<!-- Main box for lines table -->
+<div class="bx">
+    <!-- Title of the table -->
+    <div class="bx-title">All Lines</div>
+    {% if lines %}
+    <!-- Table showing all train lines -->
+    <table id="lines-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Line ID</th>
+                <th>Departure</th>
+                <th>Arrival</th>
+                <th>Trips</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for line in lines %}
+            <!-- Loop through lines -->
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td><span class="tag">{{ line.id }}</span></td>
+                <td>{{ line.departure }}</td>
+                <td>{{ line.arrival }}</td>
+                <td><span class="tag tag-blue">{{ line.trip_count }}</span></td>
+                <td>
+                    <!-- Link to filter trips for this line -->
+                    <a href="/filter?departure_city={{ line.departure }}&arrival_city={{ line.arrival }}"
+                        class="btn btn-blue btn-sm" id="btn-view-{{ loop.index }}">
+                        View Trips
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <!-- Message when no lines are found -->
+    <div class="msg msg-info">No lines found.</div>
+    {% endif %}
+</div>
+
+<!-- Extra links box -->
+<div class="bx">
+    <div class="bx-title">Quick Actions</div>
+    <div class="actions">
+        <!-- Shortcuts to other pages -->
+        <a href="/search" id="btn-search" class="btn btn-blue">Search a Trip</a>
+        <a href="/filter" id="btn-filter" class="btn btn-red">Filter Trips</a>
+        <a href="/statistics" id="btn-stats" class="btn btn-gray">Statistics</a>
+    </div>
+</div>
+{% endblock %}
