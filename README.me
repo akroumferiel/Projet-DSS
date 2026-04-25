@@ -1,0 +1,73 @@
+ Railway Trip Management 
+
+ Description:
+
+This project is part of the DSS module. It is a web application that manipulates an XML file containing railway trip data (lines, schedules, prices, etc.).
+
+The project includes: 
+
+* XML data processing
+* XSLT transformation (XML → HTML)
+* A Python web application using Flask
+
+
+ Technologies Used:
+
+* Python
+* Flask
+* XML (DOM, ElementTree)
+* XSLT
+* HTML/CSS
+
+
+ Project Structure:
+
+* `app.py` → main Flask application
+* `templates/` → HTML pages
+* `static/` → images and styles
+* `transport.xml` → data file
+* `trains.xsl` → XML transformation
+
+---
+
+ How to Run the Project
+
+ 1. Install requirements:
+
+Make sure Python is installed, then install Flask:
+
+pip install flask
+
+ 2. Run the application:
+
+python app.py
+
+3. Open in browser
+
+Go to:
+
+http://127.0.0.1:5000/
+
+
+  Features:
+
+* Search trip by code
+* Filter by departure/arrival cities
+* Filter by train type
+* Filter by price
+* Display statistics (min/max price, number of trips)
+
+
+    Notes:
+
+* This project uses the provided XML file `transport.xml`
+* DOM is used for detailed trip display
+* ElementTree is used for statistics
+
+
+
+ 
+ 
+ Author:
+
+AKROUM Feriel - DSS Module (L3)
